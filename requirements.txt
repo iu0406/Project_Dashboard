@@ -1,0 +1,6 @@
+streamlit
+requests
+openpyxl
+pandas 
+datetime 
+beautifulSoup4
