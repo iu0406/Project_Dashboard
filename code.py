@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 
 # Form input untuk data
 st.title('DASHBOARD FENOMENA')
-st.write("Selamat datang di dashboard untuk memantau fenomena terbaru!")
+st.write("Selamat datang di dashboard untuk melihat fenomena di Kabupaten Pulang Pisau!")
 
 st.header("Antara News")
 st.write("https://kalteng.antaranews.com/kabar-daerah/pulang-pisau")
@@ -99,15 +99,25 @@ for page in range(awal3,akhir3):
 
 df_8 = pd.DataFrame(article_results8)
 
+file_path = 'Artikel.xlsx'
+
 # Tombol untuk generate Excel
-if st.button('Generate Excel'):
-    # Menyimpan DataFrame ke file Excel
-    with pd.ExcelWriter('Artikel.xlsx', engine='openpyxl') as writer:
+if st.button('Generate File'):
+    with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
         df_1.to_excel(writer, sheet_name='ANTARA NEWS', index=False)
         df_11.to_excel(writer, sheet_name='FAST NEWS', index=False)
         df_8.to_excel(writer, sheet_name='PROKALTENG NEWS', index=False)
     
     st.success("Output berhasil dibuat dan disimpan sebagai Artikel.xlsx")
+
+# Setelah file dibuat, menyediakan tombol untuk mengunduh file Excel
+    with open(file_path, "rb") as f:
+        st.download_button(
+            label="Download File",
+            data=f,
+            file_name="Artikel.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
 
 # Menampilkan Data di Streamlit
 st.write("Antara News")
@@ -118,3 +128,4 @@ st.dataframe(df_11)
 
 st.write("ProKalteng News")
 st.dataframe(df_8)
+
