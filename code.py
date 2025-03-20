@@ -15,6 +15,18 @@ st.write("https://kalteng.antaranews.com/kabar-daerah/pulang-pisau")
 awal = st.number_input("Halaman Awal [Antara News]", min_value=1)
 akhir = st.number_input("Halaman Akhir [Antara News]", min_value=2, max_value=100)
 
+st.header("Fast News")
+st.write("https://fastnews.co.id/category/berita-daerah/pulang-pisau")
+
+awal2 = st.number_input("Halaman Awal [Fast News]", min_value=1)
+akhir2 = st.number_input("Halaman Akhir [Fast News]", min_value=2, max_value=100)
+
+st.header("ProKalteng News")
+st.write("https://prokalteng.jawapos.com/pemerintahan/pemkab-pulang-pisau")
+
+awal3 = st.number_input("Halaman Awal [ProKalteng News]", min_value=1)
+akhir3 = st.number_input("Halaman Akhir [ProKalteng News]", min_value=2, max_value=100)
+
 # Menggunakan data yang dimasukkan
 article_results1= []
 for page in range(awal,akhir):
@@ -39,12 +51,6 @@ for page in range(awal,akhir):
         'url':url})
 df_1 = pd.DataFrame(article_results1)
 
-st.header("Fast News")
-st.write("https://fastnews.co.id/category/berita-daerah/pulang-pisau")
-
-awal2 = st.number_input("Halaman Awal [Fast News]", min_value=1)
-akhir2 = st.number_input("Halaman Akhir [Fast News]", min_value=2, max_value=100)
-
 article_results11= []
 for page in range(awal2,akhir2): 
   url = f'https://fastnews.co.id/category/berita-daerah/pulang-pisau/page/{page}/'
@@ -68,12 +74,6 @@ for page in range(awal2,akhir2):
         'url':url})
 
 df_11 = pd.DataFrame(article_results11)
-
-st.header("ProKalteng News")
-st.write("https://prokalteng.jawapos.com/pemerintahan/pemkab-pulang-pisau")
-
-awal3 = st.number_input("Halaman Awal [ProKalteng News]", min_value=1)
-akhir3 = st.number_input("Halaman Akhir [ProKalteng News]", min_value=2, max_value=100)
 
 article_results8= []
 for page in range(awal3,akhir3):
@@ -109,7 +109,7 @@ if st.button('Generate Excel'):
     
     st.success("Output berhasil dibuat dan disimpan sebagai Artikel.xlsx")
 
-# Menampilkan Data yang telah dikumpulkan di Streamlit
+# Menampilkan Data di Streamlit
 st.write("Antara News")
 st.dataframe(df_1)
 
