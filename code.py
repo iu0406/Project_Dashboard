@@ -106,27 +106,33 @@ for page in range(awal3,akhir3):
 df_8 = pd.DataFrame(article_results8)
 
 article_results12= []
-for page in range(awal4,akhir4): 
-  url = f'https://newsway.co.id/category/kalteng/pulang-pisau/page/{page}/'
-  ge = requests.get(url)
-  soup = BeautifulSoup(ge.text,'html.parser')
-  articles = soup.find_all('div', class_='post56__text')
-  for article in articles:
-    title = article.find('a').text.strip()
-    date = article.find('div', class_='meta56__item meta56__date').text.strip()
-    url = article.find('a')['href']
+for page in range(awal4, akhir4):
+    url = f'https://newsway.co.id/category/kalteng/pulang-pisau/page/{page}/'
+    ge = requests.get(url)
+    soup = BeautifulSoup(ge.text, 'html.parser')
+    
+    # Mengambil kelas 'primary56'
+    primary_divs = soup.find_all('div', class_='primary56')
 
-    cPage = requests.get(url)
-    cSoup = BeautifulSoup(cPage.text,'html.parser')
+    for primary_div in primary_divs:
+        articles = primary_div.find_all('div', class_='post56__text')
 
-    content = cSoup.find('div', class_='entry-content single56__content single56__post_content single56__body_area').text.strip()
+        for article in articles:      
+            title = article.find('a').text.strip()
+            date = article.find('div', class_='meta56__item meta56__date').text.strip()
+            article_url = article.find('a')['href']
 
-    article_results12.append({
-        'date':date,
-        'title':title,
-        'content':content,
-        'url':url
-        })
+            cPage = requests.get(article_url)
+            cSoup = BeautifulSoup(cPage.text, 'html.parser')
+
+            content = cSoup.find('div', class_='entry-content single56__content single56__post_content single56__body_area').text.strip()
+
+            article_results12.append({
+                'date': date,
+                'title': title,
+                'content': content,
+                'url': article_url})
+  
 df_12 = pd.DataFrame(article_results12)
 
 file_path = 'Artikel.xlsx'
