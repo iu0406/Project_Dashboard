@@ -27,6 +27,12 @@ st.write("https://prokalteng.jawapos.com/pemerintahan/pemkab-pulang-pisau")
 awal3 = st.number_input("Halaman Awal [ProKalteng News]", min_value=1)
 akhir3 = st.number_input("Halaman Akhir [ProKalteng News]", min_value=2, max_value=100)
 
+st.header("News Way")
+st.write("https://newsway.co.id/category/kalteng/pulang-pisau")
+
+awal4 = st.number_input("Halaman Awal [News Way]", min_value=1)
+akhir4 = st.number_input("Halaman Akhir [News Way]", min_value=2, max_value=100)
+
 # Menggunakan data yang dimasukkan
 article_results1= []
 for page in range(awal,akhir):
@@ -72,7 +78,7 @@ for page in range(awal2,akhir2):
         'title':title,
         'content':content,
         'url':url})
-
+    
 df_11 = pd.DataFrame(article_results11)
 
 article_results8= []
@@ -99,6 +105,30 @@ for page in range(awal3,akhir3):
 
 df_8 = pd.DataFrame(article_results8)
 
+article_results12= []
+for page in range(awal4,akhir4): 
+  url = f'https://newsway.co.id/category/kalteng/pulang-pisau/page/{page}/'
+  ge = requests.get(url)
+  soup = BeautifulSoup(ge.text,'html.parser')
+  articles = soup.find_all('div', class_='post56__text')
+  for article in articles:
+    title = article.find('a').text.strip()
+    date = article.find('div', class_='meta56__item meta56__date').text.strip()
+    url = article.find('a')['href']
+
+    cPage = requests.get(url)
+    cSoup = BeautifulSoup(cPage.text,'html.parser')
+
+    content = cSoup.find('div', class_='entry-content single56__content single56__post_content single56__body_area').text.strip()
+
+    article_results12.append({
+        'date':date,
+        'title':title,
+        'content':content,
+        'url':url
+        })
+df_12 = pd.DataFrame(article_results12)
+
 file_path = 'Artikel.xlsx'
 
 # Tombol untuk generate Excel
@@ -107,6 +137,7 @@ if st.button('Generate File'):
         df_1.to_excel(writer, sheet_name='ANTARA NEWS', index=False)
         df_11.to_excel(writer, sheet_name='FAST NEWS', index=False)
         df_8.to_excel(writer, sheet_name='PROKALTENG NEWS', index=False)
+        df_12.to_excel(writer, sheet_name='NEWS WAY', index=False)
     
     st.success("Output berhasil dibuat dan disimpan sebagai Artikel.xlsx")
 
@@ -129,3 +160,5 @@ st.dataframe(df_11)
 st.write("ProKalteng News")
 st.dataframe(df_8)
 
+st.write("News Way")
+st.dataframe(df_12)
