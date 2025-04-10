@@ -7,31 +7,32 @@ from bs4 import BeautifulSoup
 
 # Form input untuk data
 st.title('DASHBOARD FENOMENA')
-st.write("Selamat datang di dashboard untuk melihat fenomena di Kabupaten Pulang Pisau!")
+st.write("Selamat datang di dashboard untuk melihat fenomena Kabupaten Pulang Pisau!")
 
 st.header("Antara News")
 st.write("https://kalteng.antaranews.com/kabar-daerah/pulang-pisau")
-
 awal = st.number_input("Halaman Awal [Antara News]", min_value=1)
 akhir = st.number_input("Halaman Akhir [Antara News]", min_value=2, max_value=100)
 
 st.header("Fast News")
 st.write("https://fastnews.co.id/category/berita-daerah/pulang-pisau")
-
 awal2 = st.number_input("Halaman Awal [Fast News]", min_value=1)
 akhir2 = st.number_input("Halaman Akhir [Fast News]", min_value=2, max_value=100)
 
 st.header("ProKalteng News")
 st.write("https://prokalteng.jawapos.com/pemerintahan/pemkab-pulang-pisau")
-
 awal3 = st.number_input("Halaman Awal [ProKalteng News]", min_value=1)
 akhir3 = st.number_input("Halaman Akhir [ProKalteng News]", min_value=2, max_value=100)
 
 st.header("News Way")
 st.write("https://newsway.co.id/category/kalteng/pulang-pisau")
-
 awal4 = st.number_input("Halaman Awal [News Way]", min_value=1)
 akhir4 = st.number_input("Halaman Akhir [News Way]", min_value=2, max_value=100)
+
+st.header("Trans Hapakat News")
+st.write("https://www.transhapakat.web.id/?s=pulang+pisau")
+awal5 = st.number_input("Halaman Awal [Trans Hapakat News]", min_value=1)
+akhir5 = st.number_input("Halaman Akhir [Trans Hapakat News]", min_value=2, max_value=100)
 
 # Menggunakan data yang dimasukkan
 article_results1= []
@@ -55,6 +56,7 @@ for page in range(awal,akhir):
         'title':title,
         'content':content,
         'url':url})
+    
 df_1 = pd.DataFrame(article_results1)
 
 article_results11= []
@@ -135,6 +137,30 @@ for page in range(awal4, akhir4):
   
 df_12 = pd.DataFrame(article_results12)
 
+article_results2= []
+for page in range(awal5,akhir5): 
+  url = f'https://www.transhapakat.web.id/page/{page}/?s=pulang+pisau'
+  ge = requests.get(url)
+  soup = BeautifulSoup(ge.text,'html.parser')
+  articles = soup.find_all('div', class_='td-block-span6')
+  for article in articles:
+    title = article.find('h3',class_='entry-title td-module-title').find('a')['title']
+    date = article.find('span', class_='td-post-date').text.strip()
+    url = article.find('h3',class_='entry-title td-module-title').find('a')['href']
+
+    cPage = requests.get(url)
+    cSoup = BeautifulSoup(cPage.text,'html.parser')
+
+    content = cSoup.find('p').text.strip()
+
+    article_results2.append({
+        'date':date,
+        'title':title,
+        'content':content,
+        'url':url})
+
+df_2 = pd.DataFrame(article_results2)
+
 file_path = 'Artikel.xlsx'
 
 # Tombol untuk generate Excel
@@ -144,8 +170,9 @@ if st.button('Generate File'):
         df_11.to_excel(writer, sheet_name='FAST NEWS', index=False)
         df_8.to_excel(writer, sheet_name='PROKALTENG NEWS', index=False)
         df_12.to_excel(writer, sheet_name='NEWS WAY', index=False)
+        df_2.to_excel(writer, sheet_name='TRANS HAPAKAT NEWS', index=False)
     
-    st.success("Output berhasil dibuat dan disimpan sebagai Artikel.xlsx")
+    st.success("Output berhasil dibuat dan disimpan: Artikel.xlsx")
 
 # Setelah file dibuat, menyediakan tombol untuk mengunduh file Excel
     with open(file_path, "rb") as f:
@@ -168,3 +195,6 @@ st.dataframe(df_8)
 
 st.write("News Way")
 st.dataframe(df_12)
+
+st.write("Trans Hapakat News")
+st.dataframe(df_2)
