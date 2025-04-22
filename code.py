@@ -35,7 +35,7 @@ awal5 = st.number_input("Halaman Awal [Trans Hapakat News]", min_value=1)
 akhir5 = st.number_input("Halaman Akhir [Trans Hapakat News]", min_value=2, max_value=100)
 
 st.header("Kalteng Pos News")
-st.write("https://www.kaltengpos.info/pulang-pisau?")
+st.write("https://www.kaltengpos.info/pulang-pisau")
 awal6 = st.number_input("Halaman Awal [Kalteng Pos News]", min_value=1)
 akhir6 = st.number_input("Halaman Akhir [Kalteng Pos News]", min_value=2, max_value=100)
 
