@@ -34,6 +34,11 @@ st.write("https://www.transhapakat.web.id/?s=pulang+pisau")
 awal5 = st.number_input("Halaman Awal [Trans Hapakat News]", min_value=1)
 akhir5 = st.number_input("Halaman Akhir [Trans Hapakat News]", min_value=2, max_value=100)
 
+st.header("Kalteng Pos News")
+st.write("https://www.kaltengpos.info/pulang-pisau?")
+awal6 = st.number_input("Halaman Awal [Kalteng Pos News]", min_value=1)
+akhir6 = st.number_input("Halaman Akhir [Kalteng Pos News]", min_value=2, max_value=100)
+
 # Menggunakan data yang dimasukkan
 article_results1= []
 for page in range(awal,akhir):
@@ -59,7 +64,7 @@ for page in range(awal,akhir):
     
 df_1 = pd.DataFrame(article_results1)
 
-article_results11= []
+article_results10= []
 for page in range(awal2,akhir2): 
   url = f'https://fastnews.co.id/category/berita-daerah/pulang-pisau/page/{page}/'
   ge = requests.get(url)
@@ -75,13 +80,13 @@ for page in range(awal2,akhir2):
 
     content = cSoup.find('div', class_='entry-content bloglo-entry').text.strip()
 
-    article_results11.append({
+    article_results10.append({
         'date':date,
         'title':title,
         'content':content,
         'url':url})
     
-df_11 = pd.DataFrame(article_results11)
+df_10 = pd.DataFrame(article_results10)
 
 article_results8= []
 for page in range(awal3,akhir3):
@@ -161,16 +166,41 @@ for page in range(awal5,akhir5):
 
 df_2 = pd.DataFrame(article_results2)
 
+article_results6= []
+for page in range(awal6,akhir6):
+  url = f'https://www.kaltengpos.info/pulang-pisau?page={page}'
+  ge = requests.get(url)
+  soup = BeautifulSoup(ge.text,'html.parser')
+  articles = soup.find_all('div', class_='latest__item')
+  for article in articles:
+    title = article.find('h2',class_='latest__title').text.strip()
+    date = article.find('date', class_='latest__date').text.strip()
+    url = article.find('h2',class_='latest__title').find('a')['href']
+
+    cPage = requests.get(url)
+    cSoup = BeautifulSoup(cPage.text,'html.parser')
+
+    content = cSoup.find('article', class_='read__content clearfix').text.strip()
+
+    article_results6.append({
+        'date':date,
+        'title':title,
+        'content':content,
+        'url':url})
+
+df_6 = pd.DataFrame(article_results6)
+
 file_path = 'Artikel.xlsx'
 
 # Tombol untuk generate Excel
 if st.button('Generate File'):
     with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
         df_1.to_excel(writer, sheet_name='ANTARA NEWS', index=False)
-        df_11.to_excel(writer, sheet_name='FAST NEWS', index=False)
+        df_10.to_excel(writer, sheet_name='FAST NEWS', index=False)
         df_8.to_excel(writer, sheet_name='PROKALTENG NEWS', index=False)
         df_12.to_excel(writer, sheet_name='NEWS WAY', index=False)
         df_2.to_excel(writer, sheet_name='TRANS HAPAKAT NEWS', index=False)
+        df_6.to_excel(writer, sheet_name='KALTENG POS NEWS', index=False)
     
     st.success("Output berhasil dibuat dan disimpan: Artikel.xlsx")
 
@@ -183,12 +213,13 @@ if st.button('Generate File'):
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
+
 # Menampilkan Data di Streamlit
 st.write("Antara News")
 st.dataframe(df_1)
 
 st.write("Fast News")
-st.dataframe(df_11)
+st.dataframe(df_10)
 
 st.write("ProKalteng News")
 st.dataframe(df_8)
@@ -198,3 +229,6 @@ st.dataframe(df_12)
 
 st.write("Trans Hapakat News")
 st.dataframe(df_2)
+
+st.write("Kalteng Pos News")
+st.dataframe(df_6)
