@@ -68,6 +68,8 @@ for page in range(awal2,akhir2):
 
 df_2 = pd.DataFrame(article_results2)
 
+file_path = 'Fenomena.xlsx'
+
 # Tombol untuk generate Excel
 if st.button('Generate File'):
     with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
