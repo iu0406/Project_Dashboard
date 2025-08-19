@@ -21,7 +21,7 @@ akhir2 = st.number_input("Halaman Akhir [ProKalteng News]", min_value=2, max_val
 
 # Menggunakan data yang dimasukkan
 article_results1= []
-for page in range(awal,akhir):
+for page in range(awal,akhir+1):
   url = f'https://kalteng.antaranews.com/kabar-daerah/pulang-pisau/{page}'
   ge = requests.get(url)
   soup = BeautifulSoup(ge.text,'html.parser')
@@ -45,7 +45,7 @@ for page in range(awal,akhir):
 df_1 = pd.DataFrame(article_results1)
 
 article_results2= []
-for page in range(awal2,akhir2):
+for page in range(awal2,akhir2+1):
   url = f'https://prokalteng.jawapos.com/pemerintahan/pemkab-pulang-pisau/page/{page}/'
   ge = requests.get(url)
   soup = BeautifulSoup(ge.text,'html.parser')
